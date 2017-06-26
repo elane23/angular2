@@ -1,0 +1,39 @@
+
+<div [ngClass]="{'container row': !!this.route.snapshot.url.length}">
+  
+  <div [ngClass]=" {'col-sm-5': !!this.route.snapshot.url.length, 'col-sm-12':!this.route.snapshot.url.length}">
+    <h2>Currency Converter</h2>
+    <div class="show">
+        <span>1 <span id="bname">{{updateBaseName}}</span> = {{currency?.rate[0].rate * num}}  <span id="tname">{{updateTargetName}}</span></span>
+        <p id="time">{{now}}</p>
+    </div>
+    <div class="show">
+        <span>1 <span id="bname">{{updateTargetName}}</span> = {{1 / currency?.rate[0].rate * num | number:'1.1-5'}}  <span id="tname">{{updateBaseName}}</span></span>
+        <p id="time">{{now}}</p>
+    </div>   
+    <div class="converter row">
+      <span class="col-2"><input class="" type="number" value=1 [(ngModel)] = "num" /></span>
+      <span class="col-3">
+        <select [(ngModel)] = "baseName">
+        <option *ngFor="let c of currencyList" [ngValue]="c">{{c}}</option>
+        </select>
+      </span>
+      <span class="col-4">
+      <select [(ngModel)] = "targetName" >
+        <option *ngFor="let c of currencyList" [ngValue]="c">{{c}}</option>
+      </select> 
+      </span>
+      
+    </div>
+    <button class="btn btn-primary" (click)="convertRate(baseName, targetName)">Convert It Now !</button>
+  </div>
+  <div class="list-type1 col-sm-6" *ngIf="this.route.snapshot.url.length">
+    <h2>Past Rates </h2>
+    <ol>
+    <li *ngFor= "let his of historical" >{{his.date}} : {{his.rate}}</li>
+    </ol>
+  </div>
+</div>
+
+
+
