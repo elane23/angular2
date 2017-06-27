@@ -29,9 +29,30 @@ export class RateConverterComponent implements OnInit {
     this.updateBaseName = this.baseName;
     this.updateTargetName = this.targetName;
     this.convertRate(this.baseName, this.targetName);
-    while (!localStorage.getItem("allCurrency")) {
+    if (!localStorage.getItem("allCurrency")) {
+     this.currencyExchangeService.getRate().then(currency => {
+       let temp = [];
+       Object.keys(currency.data).forEach(element => {
+         temp.push({
+           title: element,
+           name: element
+         })
+       });
+       temp.unshift({
+         title: currency.base,
+         name: currency.base
+       });
+       temp.sort(function (a, b) {
+         if (a.title < b.title) return -1;
+         else return 1;
+       });
+       //save the currency list to local storage and use it to show options in select list.
+       if (!localStorage.getItem("allCurrency")) {
+         localStorage.setItem("allCurrency", JSON.stringify(temp));
+       }
+     });
+   }
 
-    }
     this.currencyList = JSON.parse(localStorage.getItem("allCurrency")).map(elem => elem.title);
     let curr_moment = moment();
     this.getHistoricalData(this.baseName, this.targetName, curr_moment.subtract(0, 'days').format("YYYY-MM-DD"));
