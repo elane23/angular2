@@ -54,12 +54,7 @@ export class RateConverterComponent implements OnInit {
    }
 
     this.currencyList = JSON.parse(localStorage.getItem("allCurrency")).map(elem => elem.title);
-    let curr_moment = moment();
-    this.getHistoricalData(this.baseName, this.targetName, curr_moment.subtract(0, 'days').format("YYYY-MM-DD"));
-    for (let i = 0; i < 10; i++) {
-      this.getHistoricalData(this.baseName, this.targetName, curr_moment.subtract(1, 'days').format("YYYY-MM-DD"));
-    }
-    this.historical = this.temp;
+
   }
  /*
   * calculate the rate from base currency to target currency.
@@ -69,6 +64,14 @@ export class RateConverterComponent implements OnInit {
     this.updateTargetName = targetName;
     this.currencyExchangeService.currencyConverter(this.updateBaseName, this.updateTargetName).then(currency => {
       this.currency = currency;
+      let curr_moment = moment();
+      this.historical = [];
+      this.temp = [];
+      this.getHistoricalData(baseName,targetName, curr_moment.subtract(0, 'days').format("YYYY-MM-DD"));
+      for (let i = 0; i < 10; i++) {
+        this.getHistoricalData(baseName, targetName, curr_moment.subtract(1, 'days').format("YYYY-MM-DD"));
+      }
+      this.historical = this.temp;
     })
   }
  /*
